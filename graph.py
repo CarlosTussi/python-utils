@@ -204,18 +204,42 @@ class Graph():
         return False        #If target was not found in the current vertex's neighbours
 
     """
+    [Recursive]
     minimumSpanningTree()
 
-    TO-DO
+    - Find one possible MST from the graph using this methods
+
+        Input:
+        ------
+            vertex: Vertex
+            visited: set()
+            MST: Graph()
+        
+        Output:
+        -------
+            MST : Graph()
 
     """
-    def minimumSpanningTree(self):
-        #Sort all the edges (if weighted)
-        #Inizialize empty set to contain MST
-        #Iterate through the sorted edges
-            #If it does not create a cycle, add to the set
+    def minimumSpanningTree(self, vertex : Vertex = None, visited = set(), MST = None):
+        if(not MST):
+            MST = Graph()
+
+        if not vertex:
+            vertex = self.vertices[0]   #Start the seaerch with the first vertex from the list
         
-        pass
+        visited.add(vertex)             #Visits the vertex
+        MST.vertices.append(vertex)
+        print(str(vertex) + " visited")
+            
+        neighbours = self.findNeighbours(vertex)      #Get the neighbours of current vertex
+        for neighbour in neighbours:               #For each neighbour
+            if neighbour not in visited:           #If neighbour not yet visited
+                MST.adjacencyMatrix[(vertex.label, neighbour.label)] = True             #Add a new edge to the MST
+                MST.adjacencyMatrix[(neighbour.label),vertex.label] = True
+                self.minimumSpanningTree(neighbour, visited, MST)    #Check their neighbours
+
+
+        return MST
 
 
 if __name__ == "__main__":
@@ -256,3 +280,7 @@ if __name__ == "__main__":
     print(graph_deux)
     graph_deux.depthFirstTraversal()
     print(graph_deux.depthFirstSearch("G"))
+
+
+    new_mst = graph_deux.minimumSpanningTree()
+    print(new_mst)
