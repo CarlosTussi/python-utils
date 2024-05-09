@@ -1,13 +1,65 @@
-#Structure containing information about a vertex from a graph
+"""
+[Class Vetex]
+
+- Represent a vertex from a graph
+
+    Attributes:
+    -----------
+        label: label that identifies the vertex
+        data: data associated with the vertexù
+
+    Method:
+    -------
+        getData: return the associated data with the vertex
+"""
 class Vertex():
 
-    def __init__(self, label):
+    def __init__(self, label, data = None):
         self.label = label
+        self.data = data
 
     def __str__(self):
         return str(self.label)
 
-#List that contains all the vertices from a graph
+    """
+    getData()
+
+    Returns the associated data with the vertex
+
+        Input
+        -----
+            None
+        
+        Output:
+        ------
+            data : any
+    """
+    def getData(self) -> any:
+        return self.data
+
+"""
+[Class Graph]
+
+- Represent a Graph with vertices
+
+    Attributes:
+    ----------
+        vertices : [Vertex]
+            - Represent a list of vertices
+        
+        adjacentMatrix : dict
+            - Dictionary/hash table representing the adjacent matrix (edges)
+    
+    Methods:
+    -------
+        addVertex : add a vertex to the graph
+        addEdge: add an edge between two vertices
+        findNeighbours: find the neighbours of a vertix
+        depthFirstTraversal: traverse in a deapth first fashion
+        depthFirstSearch: search for vertex in a DFS fashion
+        minimunSpanningTree: find a minimum spanning tree for the graph
+
+"""
 class Graph():
     def __init__(self):
         self.vertices = []
@@ -25,14 +77,57 @@ class Graph():
 
         return graph_Str
 
-    def addVertex(self, vertex):
+    """
+    addVertex()
+
+    - Add a vertex to the graph
+    
+        Input:
+        ------
+            vertex: Vertex()
+
+        Output:
+        ------
+            None
+    """
+    def addVertex(self, vertex : Vertex) -> None:
         self.vertices.append(vertex)
     
-    def addEdge(self, v1, v2):
+
+
+    """
+    addEdge()
+
+    -Add an edge between two vertices (v1 and v2)
+
+        Input:
+        ------
+            v1: Vertex
+            v2: Vertex
+
+        Output:
+        -------
+            None
+    """
+    def addEdge(self, v1 : Vertex, v2 : Vertex) -> None:
         self.adjacencyMatrix[(v1.label, v2.label)] = True
         self.adjacencyMatrix[(v2.label, v1.label)] = True
 
-    def findNeighbours(self, vertex):
+    """
+    findNeighbours()
+
+    - Finds a list of all the neighbours of a given vertex
+
+        Input:
+        -----
+            vertex: Vertex
+
+        Output:
+        -------
+            neighbours : [Vertex]
+
+    """
+    def findNeighbours(self, vertex : Vertex) -> list:
         neighbours = []
 
         for elem in self.vertices:
@@ -41,51 +136,79 @@ class Graph():
         
         return neighbours
 
-    def depthFirstTraversal(self, vertex = None, visited = set()):
+
+    """
+    [Recursive]
+    depthFirstTraversal()
+
+
+    -Traverse the graph in a DFS fashion.   
+
+        Input:
+        ------
+            vertex: Vertex
+            visited: set()
+
+        Output:
+        -------     
+            None
+
+    """
+    def depthFirstTraversal(self, vertex : Vertex = None, visited = set()) -> None:
         if not vertex:
-            vertex = self.vertices[0]   #Start with the first vertex from the list
+            vertex = self.vertices[0]   #Start the seaerch with the first vertex from the list
         
-        ####################
-        # VISIT THE VERTEX #
-        ####################
-        visited.add(vertex)
+        visited.add(vertex)             #Visits the vertex
         print(str(vertex) + " visited")
             
-        neighbours = self.findNeighbours(vertex)      #Get the neighbours of current node
+        neighbours = self.findNeighbours(vertex)      #Get the neighbours of current vertex
+        for neighbour in neighbours:               #For each neighbour
+            if neighbour not in visited:           #If neighbour not yet visited
+                self.depthFirstTraversal(neighbour, visited)    #Check their neighbours
 
-        #For each neighbour
-        for neighbour in neighbours:
-            #If not yet visited, recursion
-            if neighbour not in visited:
-                #visited.append(neighbour)  #Visit the node
-                self.depthFirstTraversal(neighbour, visited)    #Recursion with its neighbours
+    """
+    [Recursive]
+    depthFirstSearch()
 
 
-    def depthFirstSearch(self, target = None, vertex = None, visited = set()):
+    -Perform a DFS for a target on the graph. 
+
+        Input:
+        ------
+            target: Vertex
+            vertex: Vertex
+            visited: set()
+
+        Output:
+        -------     
+            True/False : bool
+    
+    """
+    def depthFirstSearch(self, target : Vertex, vertex : Vertex = None, visited = set()) -> bool:
         if not vertex:
             vertex = self.vertices[0]   #Start with the first vertex from the list
 
-        ####################
-        # VISIT THE VERTEX #
-        ####################
-        visited.add(vertex)
+        visited.add(vertex)              #Visits the vertex
         print("Visited: " + str(vertex.label))
 
-        if (target == vertex.label):
+        if (target == vertex.label):    #If target vertex is found
             return True
-        else:
+        else:                           #If not found, check its neighbours
             neighbours = self.findNeighbours(vertex)      #Get the neighbours of current node
-             #For each neighbour
-            for neighbour in neighbours:
-                #If not yet visited, recursion
-                if neighbour not in visited:
-                    #visited.append(neighbour)  #Visit the node
-                    if(self.depthFirstSearch(target, neighbour, visited)):   #Recursion with its neighbours
+            for neighbour in neighbours:                  #For each neighbour
+                if neighbour not in visited:              #If neighbour not yet visited
+                    if(self.depthFirstSearch(target, neighbour, visited)):   #If  found  the target checking current vertex's neighbouts, return true
                         return True
 
 
-        return False
+        return False        #If target was not found in the current vertex's neighbours
 
+    """
+    minimumSpanningTree()
+
+    TO-DO
+
+    """
     def minimumSpanningTree(self):
         #Sort all the edges (if weighted)
         #Inizialize empty set to contain MST
@@ -96,39 +219,40 @@ class Graph():
 
 
 if __name__ == "__main__":
-    #listVertices = [Vertex(i) for i  in  range(10)]
-    listVertices = {"A":Vertex("A"), "B":Vertex("B"), "C":Vertex("C"), "D":Vertex("D"), "E":Vertex("E")}
-    graph_deux = {"A":Vertex("A"), "B":Vertex("B"), "C":Vertex("C"), "D":Vertex("D"), "E":Vertex("E"), "F":Vertex("F"), "G":Vertex("G"), "H":Vertex("H"), "I":Vertex("I")}
-    myGraph = Graph()
-    mySecondGraph = Graph()
 
-    for key in listVertices:
-        myGraph.addVertex(listVertices[key])
+    #Graph test 1
+    graph_un_vertices = {"A":Vertex("A"), "B":Vertex("B"), "C":Vertex("C"), "D":Vertex("D"), "E":Vertex("E")}
+    graph_un = Graph()
 
+    for key in graph_un_vertices:
+        graph_un.addVertex(graph_un_vertices[key])
 
-    myGraph.addEdge(listVertices["A"], listVertices["B"])
-    myGraph.addEdge(listVertices["A"], listVertices["C"])
-    myGraph.addEdge(listVertices["C"], listVertices["B"])
-    myGraph.addEdge(listVertices["B"], listVertices["E"])
-    myGraph.addEdge(listVertices["C"], listVertices["E"])
-    myGraph.addEdge(listVertices["B"], listVertices["D"])
+    graph_un.addEdge(graph_un_vertices["A"], graph_un_vertices["B"])
+    graph_un.addEdge(graph_un_vertices["A"], graph_un_vertices["C"])
+    graph_un.addEdge(graph_un_vertices["C"], graph_un_vertices["B"])
+    graph_un.addEdge(graph_un_vertices["B"], graph_un_vertices["E"])
+    graph_un.addEdge(graph_un_vertices["C"], graph_un_vertices["E"])
+    graph_un.addEdge(graph_un_vertices["B"], graph_un_vertices["D"])
 
-
-    for key in graph_deux:
-        mySecondGraph.addVertex(graph_deux[key])
-
-    mySecondGraph.addEdge(graph_deux["A"],graph_deux["B"])
-    mySecondGraph.addEdge(graph_deux["A"],graph_deux["C"])
-    mySecondGraph.addEdge(graph_deux["A"],graph_deux["D"])
-    mySecondGraph.addEdge(graph_deux["A"],graph_deux["E"])
-    mySecondGraph.addEdge(graph_deux["B"],graph_deux["F"])
-    mySecondGraph.addEdge(graph_deux["F"],graph_deux["H"])
-    mySecondGraph.addEdge(graph_deux["D"],graph_deux["G"])
-    mySecondGraph.addEdge(graph_deux["G"],graph_deux["I"])
-
-    print(myGraph)
-    print(mySecondGraph)
+    print(graph_un)
 
 
-    mySecondGraph.depthFirstTraversal()
-    print(mySecondGraph.depthFirstSearch("G"))
+    #Graph Test 2
+    graph_deux_vertices = {"A":Vertex("A"), "B":Vertex("B"), "C":Vertex("C"), "D":Vertex("D"), "E":Vertex("E"), "F":Vertex("F"), "G":Vertex("G"), "H":Vertex("H"), "I":Vertex("I")}
+    graph_deux = Graph()
+
+    for key in graph_deux_vertices:
+        graph_deux.addVertex(graph_deux_vertices[key])
+
+    graph_deux.addEdge(graph_deux_vertices["A"],graph_deux_vertices["B"])
+    graph_deux.addEdge(graph_deux_vertices["A"],graph_deux_vertices["C"])
+    graph_deux.addEdge(graph_deux_vertices["A"],graph_deux_vertices["D"])
+    graph_deux.addEdge(graph_deux_vertices["A"],graph_deux_vertices["E"])
+    graph_deux.addEdge(graph_deux_vertices["B"],graph_deux_vertices["F"])
+    graph_deux.addEdge(graph_deux_vertices["F"],graph_deux_vertices["H"])
+    graph_deux.addEdge(graph_deux_vertices["D"],graph_deux_vertices["G"])
+    graph_deux.addEdge(graph_deux_vertices["G"],graph_deux_vertices["I"])
+
+    print(graph_deux)
+    graph_deux.depthFirstTraversal()
+    print(graph_deux.depthFirstSearch("G"))
