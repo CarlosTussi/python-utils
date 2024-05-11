@@ -226,7 +226,7 @@ class Heap():
                                     #Compare which child is smaller                            
                                     if(self.heapArray[leftChildIndex].value <= self.heapArray[rightChildIndex].value):
                                         #Swap parent with left child
-                                        self.swap(self.heapArray[parentIndex], self.heapArray[leftChildIndex])
+                                        self.swap(parentIndex, leftChildIndex)
                                         parentIndex = leftChildIndex                                   
                                     else:
                                         #Swap parent with right child
@@ -234,10 +234,12 @@ class Heap():
                                         parentIndex = rightChildIndex 
                             else:   #If there is no right child
                                 #Compare which one is smaller (parent or left)
-                                if(self.heapArray[leftChildIndex] <= self.heapArray[parentIndex]):
+                                if(self.heapArray[leftChildIndex].value <= self.heapArray[parentIndex].value):
                                     #Swap parent with left child
-                                    self.swap(self.heapArray[parentIndex], self.heapArray[leftChildIndex])
-                                    parentIndex = leftChildIndex         
+                                    self.swap(parentIndex, leftChildIndex)
+                                    parentIndex = leftChildIndex
+                                else:
+                                    isRightPosition = True         
                         else:
                             #Leaf node, correct position
                             isRightPosition = True
@@ -263,8 +265,35 @@ class Heap():
             return self.heapArray[0]        #Returns element with highesst priority
         else:
             return None
+    """
+    heapSort()
 
+    - Perform the heapsort given a list.
 
+        Input:
+        ------
+            unorderedList : list
+
+        Output:
+        -------
+            orderedList : list
+    """
+    def heapSort(self,unorderedList : list)-> list:
+        
+        orderedList = []
+        #Insert items in the heap
+        for i in range(len(unorderedList)):
+            newNode = HeapNode(unorderedList[i])
+            self.insert(newNode)
+        
+        print(self)
+        input()
+        #Remove items in the heap
+        for i in range(len(unorderedList)):
+            orderedNode = self.remove()
+            orderedList.append(orderedNode)
+        
+        return orderedList
 
 
 if __name__ == "__main__":
@@ -288,7 +317,16 @@ if __name__ == "__main__":
     print(heap)
 
     nodeRemoved = heap.remove()
+    nodeRemoved = heap.remove()
+    nodeRemoved = heap.remove()
 
     print("Item removed: " + str(nodeRemoved.value))
 
     print(heap)
+
+    aList = [54, 28, 79, 45, 6, 10, 86, 52, 14, 98, 90, 97, 67, 74, 2, 82, 64, 47, 41, 23, 75, 76, 9, 34, 95, 39, 68, 23, 83, 90]
+
+    orderedList = Heap().heapSort(aList)
+
+    for i in orderedList:
+        print(i)   
