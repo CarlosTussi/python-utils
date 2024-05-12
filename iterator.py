@@ -26,18 +26,19 @@ class LinkedList():
         currentElement = self.current       #Declare currentElement to be returned
         if(self.current):                   #Update the iterator attribute with the value for the next iteration
             self.current = self.current.next
-        return currentElement
+            return currentElement
+        else:
+            raise StopIteration
+        
 
     def addElement(self, element):
-        current = self.firstLink
-
-        myiter = self.__iter__()            
+        current = self.firstLink          
 
         if(current):
             previous = None
             while(current):
                 previous = current
-                current = self.__next__()
+                current = current.next
             previous.next = element
         else:
             self.firstLink = element
@@ -58,3 +59,14 @@ for i in alist:
     linkedlist.addElement(Link(i))
 
 linkedlist.traverse()
+
+blist = [9,8,7,6,5,4,3,2,1,0]
+
+linkedList2 = LinkedList()
+for i in blist:
+    linkedList2.addElement(Link(i))
+
+iterator = iter(linkedList2)
+
+for elem in iterator:
+    print(elem, end=" ")
