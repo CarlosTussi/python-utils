@@ -24,6 +24,7 @@ class HeapNode():
 
 - Represents a Heap tree where the smallest value has the biggest priority. (min-heap)
 - Heap is represented as an array (heapArray)
+- This data structure does not provided ordered traversal. Also, it does not allow to locate specific elements or remove specific elements.
 
     Atttributes:
     ------------
@@ -31,9 +32,11 @@ class HeapNode():
 
     Methods:
     --------
-        insert() - Insert a node in the heap respecting the min-heap property
-        delete() - Delete and retrieves a node in the heap respecting the min-heap property
-        peek() - Retrieves the element with the highest proprtiy without removing it.
+        insert() - O(log n) - Insert a node in the heap respecting the min-heap property
+        delete() - O(log n) - Delete and retrieves a node in the heap respecting the min-heap property
+        peek() - O(1) - Retrieves the element with the highest proprtiy without removing it.
+        heapSort() - O(n log n) - Sort an unordered list with heapsort
+        smallest() - O(n + k log n) retrieve the K highest priority elements
 
 """
 class Heap():
@@ -129,7 +132,7 @@ class Heap():
     
 
     """
-    insert()
+    insert() - O(log n)
 
     - Insert a new node at the end of the tree and bubble it up to the correct position.
 
@@ -180,7 +183,7 @@ class Heap():
         self.heapArray[v2Index] = temp
 
     """
-    remove()
+    remove() - O(log n)
 
     - Remove the element with the highest priority, adjusting the heap accordingly after removal.
     - The tree is adjusted by moving the last element of the heap to the root and then bubbling it down to the correct postition.
@@ -247,7 +250,7 @@ class Heap():
             return nodeRemoved
     
     """
-    peek()
+    peek() - O(1)
 
     - Return the element with the highest priority
 
@@ -266,7 +269,7 @@ class Heap():
         else:
             return None
     """
-    heapSort()
+    heapSort() - O(n log n)
 
     - Perform the heapsort given a list.
 
@@ -288,13 +291,27 @@ class Heap():
         
         print(self)
         input()
-        #Remove items in the heap
+        #Remove items from the heap
         for i in range(len(unorderedList)):
             orderedNode = self.remove()
             orderedList.append(orderedNode)
         
         return orderedList
+    
+    """
+    smallest()  - O(n + k log n)
+    """
+    def  smallest(self, k=1):
+        orderedValues = []
+        
+        for i in range(k):
+            nodeRemoved = self.remove()
+            if(nodeRemoved):
+                orderedValues.append(nodeRemoved)
+        
 
+
+        return orderedValues
 
 if __name__ == "__main__":
     h1 = HeapNode(5)
@@ -330,3 +347,14 @@ if __name__ == "__main__":
 
     for i in orderedList:
         print(i)   
+
+
+    bHeap = Heap()
+    bList = [4,7,44,8,5,3,89,0,4,23,857,23,76,34,568756,23,75,235,678]
+    for i in bList:
+        bHeap.insert(HeapNode(i))
+
+    result = bHeap.smallest(5)
+
+    for i in result:
+     print(i, end=" ")
