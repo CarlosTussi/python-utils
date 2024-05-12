@@ -300,9 +300,18 @@ class Heap():
     
     """
     smallest()  - O(n + k log n)
+
+    - Return a list of the k highest priority items from the heap.
+
+        Input:
+        ------
+            k : int
+        Output:
+        -------
+            orderedValues : list
     """
-    def  smallest(self, k=1):
-        orderedValues = []
+    def  smallest(self, k: int=1) -> list:
+        orderedValues = [] 
         
         for i in range(k):
             nodeRemoved = self.remove()
